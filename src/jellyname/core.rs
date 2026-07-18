@@ -10,14 +10,22 @@ pub fn generate_movie_name(data: &MovieData) -> String {
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct EpisodeData {
-    season: u16,
-    episode: u16,
+    pub season: u16,
+    pub episode: u16,
 }
 
-pub fn extract_episodes(paths: &[PathBuf]) -> impl Iterator<Item = EpisodeData> {
-    paths
-        .iter()
-        .filter_map(|path| extract_episode(&path.to_string_lossy()))
+pub struct Episode {
+    pub filename: String,
+    pub data: EpisodeData,
+}
+
+pub fn extract_episodes(paths: &[PathBuf]) -> impl Iterator<Item = Episode> {
+    paths.iter().filter_map(|path| {
+        let data = extract_episode(&path.to_string_lossy())?;
+        let filename = path.file_name()?.to_string_lossy().to_string();
+
+        Some(Episode { filename, data })
+    })
 }
 
 pub fn extract_episode(filename: &str) -> Option<EpisodeData> {
