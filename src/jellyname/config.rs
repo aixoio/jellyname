@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fs, path::Path};
+use std::{fs, path::Path, vec};
 
 use serde::{Deserialize, Serialize};
 
@@ -34,14 +34,14 @@ pub struct MovieData {
 pub struct SeriesData {
     pub name: String,
     pub year: u16,
-
-    pub seasons: HashMap<u16, Episode>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Episode {
     pub filename: String,
+    pub season: u16,
     pub episode: u16,
+    pub ignore: bool,
 }
 
 impl Config {
@@ -94,12 +94,10 @@ impl MovieData {
 impl SeriesData {
     getter!(name, String);
     getter!(year, u16);
-    getter!(seasons, HashMap<u16, Episode>);
 
     pub fn new(name: impl Into<String>, year: u16) -> Self {
         Self {
             name: name.into(),
-            seasons: HashMap::new(),
             year,
         }
     }
@@ -118,7 +116,6 @@ impl Default for SeriesData {
     fn default() -> Self {
         Self {
             name: "[DEFAULT]".to_string(),
-            seasons: HashMap::new(),
             year: 0,
         }
     }
