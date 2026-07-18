@@ -13,6 +13,12 @@ pub enum ConfigData {
 }
 
 #[derive(Debug)]
+pub enum MediaType {
+    Movie,
+    Series,
+}
+
+#[derive(Debug)]
 pub struct MovieData {
     name: String,
     year: u16,
