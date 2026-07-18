@@ -39,7 +39,7 @@ pub struct SeriesData {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Episode {
-    pub filename: String,
+    pub path: String,
     pub season: u16,
     pub episode: u16,
     pub ignore: bool,

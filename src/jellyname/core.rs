@@ -16,14 +16,14 @@ pub struct EpisodeData {
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct Episode {
-    pub filename: String,
+    pub path: String,
     pub data: EpisodeData,
 }
 
 #[inline]
 pub fn convert_episode_to_config(e: Episode) -> config::Episode {
     config::Episode {
-        filename: e.filename,
+        path: e.path,
         season: e.data.season,
         episode: e.data.episode,
         ignore: false,
@@ -33,9 +33,9 @@ pub fn convert_episode_to_config(e: Episode) -> config::Episode {
 pub fn extract_episodes(paths: &[PathBuf]) -> impl Iterator<Item = Episode> {
     paths.iter().filter_map(|path| {
         let data = extract_episode(&path.to_string_lossy())?;
-        let filename = path.file_name()?.to_string_lossy().to_string();
+        let path = path.to_string_lossy().to_string();
 
-        Some(Episode { filename, data })
+        Some(Episode { path, data })
     })
 }
 
@@ -63,9 +63,9 @@ mod tests {
     use super::*;
     use std::path::PathBuf;
 
-    fn episode(filename: &str, season: u16, episode: u16) -> Episode {
+    fn episode(path: &str, season: u16, episode: u16) -> Episode {
         Episode {
-            filename: filename.to_string(),
+            path: path.to_string(),
             data: EpisodeData { season, episode },
         }
     }
@@ -162,8 +162,16 @@ mod tests {
         assert_eq!(
             episodes,
             vec![
-                episode("random.series.S01E04.mkv", 1, 4),
-                episode("another.series.S12E103.mkv", 12, 103),
+                episode(
+                    "/media/tv/Random Series/Season 01/random.series.S01E04.mkv",
+                    1,
+                    4
+                ),
+                episode(
+                    "/media/tv/Another Series/Season 12/another.series.S12E103.mkv",
+                    12,
+                    103
+                ),
             ]
         );
     }
