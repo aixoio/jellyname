@@ -103,6 +103,8 @@ fn rename_series(path: PathBuf) -> ExitCode {
     );
     println!("  {}: {}", "Episodes".cyan(), episodes.len());
 
+    println!();
+
     println!("Data created in {}", SERIES_FILENAME.italic().bold());
 
     ExitCode::SUCCESS
