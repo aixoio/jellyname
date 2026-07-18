@@ -2,7 +2,10 @@ use std::process::ExitCode;
 
 use clap::{Parser, Subcommand};
 
-use crate::cli::commands::init::{self, InitMediaType};
+use crate::cli::commands::{
+    init::{self, InitMediaType},
+    rename::{self, RenameSubcommand},
+};
 
 mod commands;
 
@@ -19,12 +22,17 @@ pub enum Commands {
         #[command(subcommand)]
         kind: InitMediaType,
     },
+    Rename {
+        #[command(subcommand)]
+        subcomnmand: RenameSubcommand,
+    },
 }
 
 impl Commands {
     pub fn run(self) -> ExitCode {
         match self {
             Commands::Init { kind } => init::run(kind),
+            Commands::Rename { subcomnmand } => rename::run(subcomnmand),
         }
     }
 }
