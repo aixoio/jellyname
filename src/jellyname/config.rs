@@ -10,6 +10,7 @@ pub const CONFIG_FILENAME: &str = "jellyname.toml";
 pub struct Config {
     applied: bool,
     imdb_id: String,
+    targets: Vec<String>,
     data: ConfigData,
 }
 
@@ -42,17 +43,16 @@ impl Config {
     getter!(data, ConfigData);
 
     pub fn new(kind: &MediaType) -> Self {
-        match kind {
-            MediaType::Movie => Config {
-                applied: false,
-                imdb_id: "[NONE]".to_string(),
-                data: ConfigData::Movie(MovieData::default()),
-            },
-            MediaType::Series => Config {
-                applied: false,
-                imdb_id: "[NONE]".to_string(),
-                data: ConfigData::Series(SeriesData::default()),
-            },
+        let data = match kind {
+            MediaType::Movie => ConfigData::Movie(MovieData::default()),
+            MediaType::Series => ConfigData::Series(SeriesData::default()),
+        };
+
+        Self {
+            applied: false,
+            targets: ["mkv", "mp4", "mov"].map(String::from).to_vec(),
+            imdb_id: String::from("[NONE]"),
+            data,
         }
     }
 
