@@ -1,8 +1,10 @@
-use std::path::Path;
+use std::{fs, path::Path};
 
 use serde::{Deserialize, Serialize};
 
 use crate::getter;
+
+const CONFIG_FILENAME: &str = "config.toml";
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Config {
@@ -52,7 +54,13 @@ impl Config {
     }
 
     pub fn check_config_exists() -> bool {
-        Path::new("config.toml").exists()
+        Path::new(CONFIG_FILENAME).exists()
+    }
+
+    pub fn read_config() -> anyhow::Result<Self> {
+        let contents = fs::read_to_string(CONFIG_FILENAME)?;
+
+        Ok(toml::from_str(&contents)?)
     }
 }
 
