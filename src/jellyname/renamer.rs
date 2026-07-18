@@ -42,6 +42,7 @@ pub fn rename_series(data: &SeriesData, episodes: &[Episode]) -> anyhow::Result<
 
     for season in episodes
         .iter()
+        .filter(|e| !e.ignore)
         .map(|e| e.season)
         .collect::<HashSet<_>>()
         .into_iter()
@@ -52,7 +53,7 @@ pub fn rename_series(data: &SeriesData, episodes: &[Episode]) -> anyhow::Result<
         fs::create_dir_all(dest)?;
     }
 
-    for episode in episodes {
+    for episode in episodes.iter().filter(|e| !e.ignore) {
         let season_dest = generate_season_name(episode.season);
         let season_dest = dest_folder.join(season_dest);
 
