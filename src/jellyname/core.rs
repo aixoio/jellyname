@@ -14,6 +14,7 @@ pub struct EpisodeData {
     pub episode: u16,
 }
 
+#[derive(Debug, PartialEq, Eq)]
 pub struct Episode {
     pub filename: String,
     pub data: EpisodeData,
@@ -52,6 +53,13 @@ mod tests {
     use super::*;
     use std::path::PathBuf;
 
+    fn episode(filename: &str, season: u16, episode: u16) -> Episode {
+        Episode {
+            filename: filename.to_string(),
+            data: EpisodeData { season, episode },
+        }
+    }
+
     #[test]
     fn extracts_episodes_from_valid_paths() {
         let paths = vec![
@@ -59,19 +67,13 @@ mod tests {
             PathBuf::from("another.series.S02E09.mp4"),
         ];
 
-        let episodes: Vec<EpisodeData> = extract_episodes(&paths).collect();
+        let episodes: Vec<Episode> = extract_episodes(&paths).collect();
 
         assert_eq!(
             episodes,
             vec![
-                EpisodeData {
-                    season: 1,
-                    episode: 4,
-                },
-                EpisodeData {
-                    season: 2,
-                    episode: 9,
-                },
+                episode("random.series.S01E04.mkv", 1, 4),
+                episode("another.series.S02E09.mp4", 2, 9),
             ]
         );
     }
@@ -84,19 +86,13 @@ mod tests {
             PathBuf::from("another.series.S03E12.mp4"),
         ];
 
-        let episodes: Vec<EpisodeData> = extract_episodes(&paths).collect();
+        let episodes: Vec<Episode> = extract_episodes(&paths).collect();
 
         assert_eq!(
             episodes,
             vec![
-                EpisodeData {
-                    season: 1,
-                    episode: 4,
-                },
-                EpisodeData {
-                    season: 3,
-                    episode: 12,
-                },
+                episode("random.series.S01E04.mkv", 1, 4),
+                episode("another.series.S03E12.mp4", 3, 12),
             ]
         );
     }
@@ -109,7 +105,7 @@ mod tests {
             PathBuf::from("video.2024.mp4"),
         ];
 
-        let episodes: Vec<EpisodeData> = extract_episodes(&paths).collect();
+        let episodes: Vec<Episode> = extract_episodes(&paths).collect();
 
         assert!(episodes.is_empty());
     }
@@ -118,7 +114,7 @@ mod tests {
     fn returns_empty_iterator_for_empty_input() {
         let paths: Vec<PathBuf> = Vec::new();
 
-        let episodes: Vec<EpisodeData> = extract_episodes(&paths).collect();
+        let episodes: Vec<Episode> = extract_episodes(&paths).collect();
 
         assert!(episodes.is_empty());
     }
@@ -132,23 +128,14 @@ mod tests {
             PathBuf::from("series.S03E07.mkv"),
         ];
 
-        let episodes: Vec<EpisodeData> = extract_episodes(&paths).collect();
+        let episodes: Vec<Episode> = extract_episodes(&paths).collect();
 
         assert_eq!(
             episodes,
             vec![
-                EpisodeData {
-                    season: 4,
-                    episode: 10,
-                },
-                EpisodeData {
-                    season: 1,
-                    episode: 2,
-                },
-                EpisodeData {
-                    season: 3,
-                    episode: 7,
-                },
+                episode("series.S04E10.mkv", 4, 10),
+                episode("series.S01E02.mkv", 1, 2),
+                episode("series.S03E07.mkv", 3, 7),
             ]
         );
     }
@@ -160,19 +147,13 @@ mod tests {
             PathBuf::from("/media/tv/Another Series/Season 12/another.series.S12E103.mkv"),
         ];
 
-        let episodes: Vec<EpisodeData> = extract_episodes(&paths).collect();
+        let episodes: Vec<Episode> = extract_episodes(&paths).collect();
 
         assert_eq!(
             episodes,
             vec![
-                EpisodeData {
-                    season: 1,
-                    episode: 4,
-                },
-                EpisodeData {
-                    season: 12,
-                    episode: 103,
-                },
+                episode("random.series.S01E04.mkv", 1, 4),
+                episode("another.series.S12E103.mkv", 12, 103),
             ]
         );
     }
@@ -187,21 +168,9 @@ mod tests {
 
         let mut episodes = extract_episodes(&paths);
 
-        assert_eq!(
-            episodes.next(),
-            Some(EpisodeData {
-                season: 1,
-                episode: 4,
-            })
-        );
+        assert_eq!(episodes.next(), Some(episode("series.S01E04.mkv", 1, 4)));
 
-        assert_eq!(
-            episodes.next(),
-            Some(EpisodeData {
-                season: 1,
-                episode: 5,
-            })
-        );
+        assert_eq!(episodes.next(), Some(episode("series.S01E05.mkv", 1, 5)));
 
         assert_eq!(episodes.next(), None);
     }
