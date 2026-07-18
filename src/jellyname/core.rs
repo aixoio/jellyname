@@ -14,8 +14,10 @@ pub struct EpisodeData {
     episode: u16,
 }
 
-pub fn extract_episodes(paths: &[PathBuf]) -> Vec<EpisodeData> {
-    paths.iter().filter_map(|path| unimplemented!()).collect()
+pub fn extract_episodes(paths: &[PathBuf]) -> impl Iterator<Item = EpisodeData> {
+    paths
+        .iter()
+        .filter_map(|path| extract_episode(&path.to_string_lossy()))
 }
 
 pub fn extract_episode(filename: &str) -> Option<EpisodeData> {
