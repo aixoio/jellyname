@@ -1,4 +1,4 @@
-use std::{path::PathBuf, process::ExitCode};
+use std::{collections::HashSet, path::PathBuf, process::ExitCode};
 
 use clap::Subcommand;
 use owo_colors::OwoColorize;
@@ -6,7 +6,7 @@ use owo_colors::OwoColorize;
 use crate::{
     handle_error,
     jellyname::{
-        config::{self, Config, ConfigData},
+        config::{self, Config, ConfigData, SERIES_FILENAME},
         core::{convert_episode_to_config, extract_episodes},
         descover::descover_series,
         renamer,
@@ -64,12 +64,6 @@ fn rename_series(path: PathBuf) -> ExitCode {
     };
     println!();
 
-    println!("{}", "Series".bold().blue());
-    println!("  {}: {}", "Name".cyan(), data.name());
-    println!("  {}: {}", "Year".cyan(), data.year());
-
-    println!();
-
     println!("Walking...");
 
     let Some(path) = path.to_str() else {
@@ -77,11 +71,39 @@ fn rename_series(path: PathBuf) -> ExitCode {
     };
     let paths = match_error!(descover_series(path, &config));
 
+    println!("Extracting...");
+
     let episodes: Vec<_> = extract_episodes(&paths)
         .map(convert_episode_to_config)
         .collect();
 
-    println!("{episodes:#?}");
+    println!("Generating...");
+
+    let mut wtr = match_error!(csv::Writer::from_path(SERIES_FILENAME));
+
+    for episode in &episodes {
+        handle_error!(wtr.serialize(episode));
+    }
+
+    handle_error!(wtr.flush());
+
+    println!();
+
+    println!("{}", "Series".bold().blue());
+    println!("  {}: {}", "Name".cyan(), data.name());
+    println!("  {}: {}", "Year".cyan(), data.year());
+    println!(
+        "  {}: {}",
+        "Seasons".cyan(),
+        episodes
+            .iter()
+            .map(|e| e.season)
+            .collect::<HashSet<_>>()
+            .len()
+    );
+    println!("  {}: {}", "Episodes".cyan(), episodes.len());
+
+    println!("Data created in {}", SERIES_FILENAME.italic().bold());
 
     ExitCode::SUCCESS
 }
