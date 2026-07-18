@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use regex::regex;
 
-use crate::jellyname::config::MovieData;
+use crate::jellyname::config::{self, MovieData};
 
 pub fn generate_movie_name(data: &MovieData) -> String {
     format!("{} ({})", data.name(), data.year())
@@ -18,6 +18,16 @@ pub struct EpisodeData {
 pub struct Episode {
     pub filename: String,
     pub data: EpisodeData,
+}
+
+#[inline]
+pub fn convert_episode_to_config(e: Episode) -> config::Episode {
+    config::Episode {
+        filename: e.filename,
+        season: e.data.season,
+        episode: e.data.episode,
+        ignore: false,
+    }
 }
 
 pub fn extract_episodes(paths: &[PathBuf]) -> impl Iterator<Item = Episode> {
