@@ -1,20 +1,20 @@
-use std::{path::PathBuf, process::ExitCode};
+use std::process::ExitCode;
 
 use clap::Subcommand;
 
 #[derive(Subcommand)]
 pub enum ApplySubcommand {
-    Series { path: PathBuf },
+    Series,
 }
 
 pub fn run(sub: ApplySubcommand) -> ExitCode {
     match sub {
-        ApplySubcommand::Series { path } => apply_series(path),
+        ApplySubcommand::Series => apply_series(),
     }
 }
 
-fn apply_series(path: PathBuf) -> ExitCode {
-    println!("{:?}", path);
+fn apply_series() -> ExitCode {
+    println!("applying...");
 
     ExitCode::SUCCESS
 }
