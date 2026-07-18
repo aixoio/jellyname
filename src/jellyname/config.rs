@@ -1,3 +1,5 @@
+use std::{fs::File, path::Path};
+
 use serde::{Deserialize, Serialize};
 
 use crate::getter;
@@ -47,6 +49,10 @@ impl Config {
                 data: ConfigData::Series(SeriesData::default()),
             },
         }
+    }
+
+    pub fn check_config_exists() -> bool {
+        Path::new("config.toml").exists()
     }
 }
 
