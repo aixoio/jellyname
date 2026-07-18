@@ -2,7 +2,10 @@ use std::{fs, path::Path};
 
 use anyhow::anyhow;
 
-use crate::jellyname::{config::MovieData, core::generate_movie_name};
+use crate::jellyname::{
+    config::{Episode, MovieData, SeriesData},
+    core::generate_movie_name,
+};
 
 /// creates and moves movie into a new folder matching jellyfin spec
 pub fn rename_movie(data: &MovieData, path: &str) -> anyhow::Result<()> {
@@ -21,5 +24,10 @@ pub fn rename_movie(data: &MovieData, path: &str) -> anyhow::Result<()> {
 
     fs::rename(source, dest)?;
 
+    Ok(())
+}
+
+/// creates and moves files into new folders matching jellyfin spec
+pub fn rename_series(data: &SeriesData, episodes: &[Episode]) -> anyhow::Result<()> {
     Ok(())
 }
