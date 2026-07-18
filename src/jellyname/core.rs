@@ -12,6 +12,14 @@ pub fn generate_series_name(data: &SeriesData) -> String {
     format!("{} ({})", data.name(), data.year())
 }
 
+pub fn generate_season_name(season: u16) -> String {
+    format!("Season {:02}", season)
+}
+
+pub fn generate_episode_name(data: &SeriesData, e: &config::Episode) -> String {
+    format!("{} S{:02}E{:02}", data.name(), e.season, e.episode)
+}
+
 #[derive(Debug, PartialEq, Eq)]
 pub struct EpisodeData {
     pub season: u16,
@@ -66,6 +74,13 @@ pub fn extract_episode(filename: &str) -> Option<EpisodeData> {
 mod tests {
     use super::*;
     use std::path::PathBuf;
+
+    #[test]
+    fn test_generate_season_name() {
+        assert_eq!(generate_season_name(5), "Season 05");
+        assert_eq!(generate_season_name(50), "Season 50");
+        assert_eq!(generate_season_name(500), "Season 500");
+    }
 
     fn episode(path: &str, season: u16, episode: u16) -> Episode {
         Episode {

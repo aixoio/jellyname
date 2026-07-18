@@ -4,7 +4,11 @@ use clap::Subcommand;
 use owo_colors::OwoColorize;
 
 use crate::{
-    jellyname::config::{self, Config, ConfigData, Episode},
+    handle_error,
+    jellyname::{
+        config::{self, Config, ConfigData, Episode},
+        renamer,
+    },
     match_error, return_error,
 };
 
@@ -39,7 +43,13 @@ fn apply_series() -> ExitCode {
         .collect::<Result<Vec<Episode>, csv::Error>>();
     let episodes = match_error!(episodes);
 
-    println!("{episodes:#?}");
+    println!();
+
+    println!("Renaming...");
+
+    handle_error!(renamer::rename_series(data, &episodes));
+
+    println!("{}", "Done!".bright_green().bold());
 
     ExitCode::SUCCESS
 }
