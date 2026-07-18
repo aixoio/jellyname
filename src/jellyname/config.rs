@@ -8,7 +8,6 @@ pub const CONFIG_FILENAME: &str = "jellyname.toml";
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Config {
-    applied: bool,
     targets: Vec<String>,
     data: ConfigData,
 }
@@ -46,7 +45,6 @@ pub struct Episode {
 }
 
 impl Config {
-    getter!(applied, bool);
     getter!(targets, Vec<String>);
     getter!(data, ConfigData);
 
@@ -57,7 +55,6 @@ impl Config {
         };
 
         Self {
-            applied: false,
             targets: ["mkv", "mp4", "mov"].map(String::from).to_vec(),
             data,
         }
