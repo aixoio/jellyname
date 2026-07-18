@@ -36,10 +36,7 @@ pub fn extract_episode(filename: &str) -> Option<EpisodeData> {
         return None;
     };
 
-    Some(EpisodeData {
-        season: season,
-        episode: episode,
-    })
+    Some(EpisodeData { season, episode })
 }
 
 #[cfg(test)]
