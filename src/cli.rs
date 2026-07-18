@@ -3,6 +3,7 @@ use std::process::ExitCode;
 use clap::{Parser, Subcommand};
 
 use crate::cli::commands::{
+    apply::{self, ApplySubcommand},
     init::{self, InitMediaType},
     rename::{self, RenameSubcommand},
 };
@@ -26,6 +27,10 @@ pub enum Commands {
         #[command(subcommand)]
         subcomnmand: RenameSubcommand,
     },
+    Apply {
+        #[command(subcommand)]
+        sub: ApplySubcommand,
+    },
 }
 
 impl Commands {
@@ -33,6 +38,7 @@ impl Commands {
         match self {
             Commands::Init { kind } => init::run(kind),
             Commands::Rename { subcomnmand } => rename::run(subcomnmand),
+            Commands::Apply { sub } => apply::run(sub),
         }
     }
 }
