@@ -62,6 +62,14 @@ impl Config {
 
         Ok(toml::from_str(&contents)?)
     }
+
+    pub fn write_config(&self) -> anyhow::Result<()> {
+        let contents = toml::to_string_pretty(self)?;
+
+        fs::write(CONFIG_FILENAME, contents)?;
+
+        Ok(())
+    }
 }
 
 impl MovieData {
