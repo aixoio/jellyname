@@ -1,12 +1,14 @@
+use serde::{Deserialize, Serialize};
+
 use crate::getter;
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Config {
     applied: bool,
     data: ConfigData,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum ConfigData {
     Movie(MovieData),
     Series(SeriesData),
@@ -18,13 +20,13 @@ pub enum MediaType {
     Series,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct MovieData {
     name: String,
     year: u16,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct SeriesData {
     name: String,
     year: u16,
