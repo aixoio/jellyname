@@ -1,7 +1,10 @@
 use std::process::ExitCode;
 
-fn main() -> ExitCode {
-    println!("Hello, world!");
+use clap::Parser;
+use jellyname::cli::Cli;
 
-    ExitCode::SUCCESS
+fn main() -> ExitCode {
+    let cli = Cli::parse();
+
+    cli.command.run()
 }
