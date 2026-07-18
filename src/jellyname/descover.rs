@@ -5,7 +5,7 @@ use walkdir::WalkDir;
 use crate::jellyname::config::Config;
 
 pub fn descover_series(path: &str, config: &Config) -> anyhow::Result<Vec<PathBuf>> {
-    let mut paths: Vec<PathBuf> = vec![];
+    let mut paths: Vec<PathBuf> = Vec::new();
 
     for entry in WalkDir::new(path) {
         let entry = entry?;

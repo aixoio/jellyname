@@ -1,7 +1,18 @@
+use std::path::PathBuf;
+
 use crate::jellyname::config::MovieData;
 
 pub fn generate_movie_name(data: &MovieData) -> String {
     format!("{} ({})", data.name(), data.year())
+}
+
+pub struct EpisodeData {
+    season: u16,
+    number: u16,
+}
+
+pub fn extract_episodes(paths: &[PathBuf]) -> Vec<EpisodeData> {
+    paths.iter().filter_map(|path| unimplemented!()).collect()
 }
 
 #[cfg(test)]
