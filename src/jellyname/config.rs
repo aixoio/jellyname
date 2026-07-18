@@ -9,6 +9,7 @@ pub const CONFIG_FILENAME: &str = "jellyname.toml";
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Config {
     applied: bool,
+    imdb_id: String,
     data: ConfigData,
 }
 
@@ -44,10 +45,12 @@ impl Config {
         match kind {
             MediaType::Movie => Config {
                 applied: false,
+                imdb_id: "[NONE]".to_string(),
                 data: ConfigData::Movie(MovieData::default()),
             },
             MediaType::Series => Config {
                 applied: false,
+                imdb_id: "[NONE]".to_string(),
                 data: ConfigData::Series(SeriesData::default()),
             },
         }
