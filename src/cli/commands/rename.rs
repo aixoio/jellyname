@@ -25,8 +25,7 @@ pub fn run(sub: RenameSubcommand) -> ExitCode {
 
 fn rename_movie(path: PathBuf) -> ExitCode {
     println!(
-        "{} {}",
-        "Loading config from",
+        "Loading config from {}",
         config::CONFIG_FILENAME.italic().bold()
     );
     let config = match_error!(Config::read_config());

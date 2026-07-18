@@ -36,8 +36,7 @@ pub fn run(kind: InitMediaType) -> ExitCode {
     handle_error!(config.write_config());
 
     println!(
-        "{} {}",
-        "Config created in",
+        "Config created in {}",
         config::CONFIG_FILENAME.italic().bold()
     );
 
