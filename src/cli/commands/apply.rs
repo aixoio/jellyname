@@ -4,7 +4,7 @@ use clap::Subcommand;
 use owo_colors::OwoColorize;
 
 use crate::{
-    jellyname::config::{self, Config, ConfigData},
+    jellyname::config::{self, Config, ConfigData, Episode},
     match_error, return_error,
 };
 
@@ -28,9 +28,18 @@ fn apply_series() -> ExitCode {
     let ConfigData::Series(data) = config.data() else {
         return_error!("config is not for series");
     };
-    println!();
 
-    println!("{data:#?}");
+    println!(
+        "Loading data from {}",
+        config::SERIES_FILENAME.italic().bold()
+    );
+    let mut rdr = match_error!(csv::Reader::from_path(config::SERIES_FILENAME));
+    let episodes = rdr
+        .deserialize()
+        .collect::<Result<Vec<Episode>, csv::Error>>();
+    let episodes = match_error!(episodes);
+
+    println!("{episodes:#?}");
 
     ExitCode::SUCCESS
 }
