@@ -6,7 +6,7 @@ use owo_colors::OwoColorize;
 use crate::{
     handle_error,
     jellyname::config::{self, Config, MediaType},
-    print_error,
+    return_error,
 };
 
 #[derive(Subcommand)]
@@ -28,7 +28,7 @@ pub fn run(kind: InitMediaType) -> ExitCode {
     let kind = kind.convert();
 
     if Config::check_config_exists() {
-        print_error!("config already exists");
+        return_error!("config already exists");
     }
 
     let config = Config::new(&kind);
@@ -37,8 +37,8 @@ pub fn run(kind: InitMediaType) -> ExitCode {
 
     println!(
         "{} {}",
-        "Config created in".bold(),
-        config::CONFIG_FILENAME.bright_black()
+        "Config created in",
+        config::CONFIG_FILENAME.italic().bold()
     );
 
     ExitCode::SUCCESS
