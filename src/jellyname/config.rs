@@ -8,8 +8,8 @@ pub const CONFIG_FILENAME: &str = "jellyname.toml";
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Config {
-    targets: Vec<String>,
-    data: ConfigData,
+    pub targets: Vec<String>,
+    pub data: ConfigData,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -26,16 +26,16 @@ pub enum MediaType {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct MovieData {
-    name: String,
-    year: u16,
+    pub name: String,
+    pub year: u16,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SeriesData {
-    name: String,
-    year: u16,
+    pub name: String,
+    pub year: u16,
 
-    seasons: HashMap<u16, Episode>,
+    pub seasons: HashMap<u16, Episode>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
