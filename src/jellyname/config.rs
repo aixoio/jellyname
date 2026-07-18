@@ -40,6 +40,8 @@ pub struct SeriesData {
 
 impl Config {
     getter!(applied, bool);
+    getter!(imdb_id, str);
+    getter!(targets, Vec<String>);
     getter!(data, ConfigData);
 
     pub fn new(kind: &MediaType) -> Self {
