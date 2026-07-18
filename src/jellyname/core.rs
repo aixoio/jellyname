@@ -1,5 +1,7 @@
 use std::path::PathBuf;
 
+use regex::regex;
+
 use crate::jellyname::config::MovieData;
 
 pub fn generate_movie_name(data: &MovieData) -> String {
@@ -17,7 +19,25 @@ pub fn extract_episodes(paths: &[PathBuf]) -> Vec<EpisodeData> {
 }
 
 pub fn extract_episode(filename: &str) -> Option<EpisodeData> {
-    None
+    let re = regex!(r"(?i)S[0-9]+E[0-9]+"); // matches `S01E01` from a string
+    let cap = re.find(filename)?;
+    if cap.is_empty() {
+        return None;
+    }
+
+    let cap = cap.as_str().to_uppercase();
+    let cap = cap.split_once('E')?;
+    let Ok(season) = &cap.0[1..].parse::<u16>() else {
+        return None;
+    };
+    let Ok(episode) = &cap.1.parse::<u16>() else {
+        return None;
+    };
+
+    Some(EpisodeData {
+        season: *season,
+        episode: *episode,
+    })
 }
 
 #[cfg(test)]
