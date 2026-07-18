@@ -2,9 +2,13 @@ use std::path::PathBuf;
 
 use regex::regex;
 
-use crate::jellyname::config::{self, MovieData};
+use crate::jellyname::config::{self, MovieData, SeriesData};
 
 pub fn generate_movie_name(data: &MovieData) -> String {
+    format!("{} ({})", data.name(), data.year())
+}
+
+pub fn generate_series_name(data: &SeriesData) -> String {
     format!("{} ({})", data.name(), data.year())
 }
 
@@ -191,6 +195,22 @@ mod tests {
         assert_eq!(episodes.next(), Some(episode("series.S01E05.mkv", 1, 5)));
 
         assert_eq!(episodes.next(), None);
+    }
+
+    #[test]
+    fn test_generate_series_name_empty() {
+        let data = SeriesData::new("", 0);
+
+        assert_eq!(generate_series_name(&data), " (0)");
+        assert_ne!(generate_series_name(&data), "");
+    }
+
+    #[test]
+    fn test_generate_series_name() {
+        let data = SeriesData::new("series name", 2011);
+
+        assert_eq!(generate_series_name(&data), "series name (2011)");
+        assert_ne!(generate_series_name(&data), "series name 2011");
     }
 
     #[test]
