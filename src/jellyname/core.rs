@@ -29,16 +29,16 @@ pub fn extract_episode(filename: &str) -> Option<EpisodeData> {
 
     let cap = cap.as_str().to_uppercase();
     let cap = cap.split_once('E')?;
-    let Ok(season) = &cap.0[1..].parse::<u16>() else {
+    let Ok(season) = cap.0[1..].parse::<u16>() else {
         return None;
     };
-    let Ok(episode) = &cap.1.parse::<u16>() else {
+    let Ok(episode) = cap.1.parse::<u16>() else {
         return None;
     };
 
     Some(EpisodeData {
-        season: *season,
-        episode: *episode,
+        season: season,
+        episode: episode,
     })
 }
 
