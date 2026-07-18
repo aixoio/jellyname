@@ -1,7 +1,13 @@
 use clap::Subcommand;
 use std::process::ExitCode;
 
-use crate::jellyname::config::MediaType;
+use owo_colors::OwoColorize;
+
+use crate::{
+    handle_error,
+    jellyname::config::{self, Config, MediaType},
+    print_error,
+};
 
 #[derive(Subcommand)]
 pub enum InitMediaType {
@@ -21,8 +27,19 @@ impl InitMediaType {
 pub fn run(kind: InitMediaType) -> ExitCode {
     let kind = kind.convert();
 
-    println!("Init command");
-    println!("{kind:?}");
+    if Config::check_config_exists() {
+        print_error!("config already exists");
+    }
+
+    let config = Config::new(&kind);
+
+    handle_error!(config.write_config());
+
+    println!(
+        "{} {}",
+        "Config created in".bold(),
+        config::CONFIG_FILENAME.bright_black()
+    );
 
     ExitCode::SUCCESS
 }
