@@ -47,6 +47,14 @@ mod tests {
     use super::*;
 
     #[test]
+    fn test_generate_movie_name_empty() {
+        let data = MovieData::new("", 0);
+
+        assert_eq!(generate_movie_name(&data), " (0)");
+        assert_ne!(generate_movie_name(&data), "");
+    }
+
+    #[test]
     fn test_generate_movie_name() {
         let data = MovieData::new("movie name", 2011);
 
