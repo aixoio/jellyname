@@ -35,6 +35,19 @@ pub struct SeriesData {
 impl Config {
     getter!(applied, bool);
     getter!(data, ConfigData);
+
+    pub fn new(kind: &MediaType) -> Self {
+        match kind {
+            MediaType::Movie => Config {
+                applied: false,
+                data: ConfigData::Movie(MovieData::default()),
+            },
+            MediaType::Series => Config {
+                applied: false,
+                data: ConfigData::Series(SeriesData::default()),
+            },
+        }
+    }
 }
 
 impl MovieData {
