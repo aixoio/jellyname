@@ -80,11 +80,25 @@ impl Config {
 impl MovieData {
     getter!(name, String);
     getter!(year, u16);
+
+    pub fn new(name: impl Into<String>, year: u16) -> Self {
+        Self {
+            name: name.into(),
+            year,
+        }
+    }
 }
 
 impl SeriesData {
     getter!(name, String);
     getter!(year, u16);
+
+    pub fn new(name: impl Into<String>, year: u16) -> Self {
+        Self {
+            name: name.into(),
+            year,
+        }
+    }
 }
 
 impl Default for MovieData {
