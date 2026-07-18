@@ -45,6 +45,161 @@ pub fn extract_episode(filename: &str) -> Option<EpisodeData> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::path::PathBuf;
+
+    #[test]
+    fn extracts_episodes_from_valid_paths() {
+        let paths = vec![
+            PathBuf::from("random.series.S01E04.mkv"),
+            PathBuf::from("another.series.S02E09.mp4"),
+        ];
+
+        let episodes: Vec<EpisodeData> = extract_episodes(&paths).collect();
+
+        assert_eq!(
+            episodes,
+            vec![
+                EpisodeData {
+                    season: 1,
+                    episode: 4,
+                },
+                EpisodeData {
+                    season: 2,
+                    episode: 9,
+                },
+            ]
+        );
+    }
+
+    #[test]
+    fn skips_paths_without_episode_information() {
+        let paths = vec![
+            PathBuf::from("random.series.S01E04.mkv"),
+            PathBuf::from("movie.2024.1080p.mkv"),
+            PathBuf::from("another.series.S03E12.mp4"),
+        ];
+
+        let episodes: Vec<EpisodeData> = extract_episodes(&paths).collect();
+
+        assert_eq!(
+            episodes,
+            vec![
+                EpisodeData {
+                    season: 1,
+                    episode: 4,
+                },
+                EpisodeData {
+                    season: 3,
+                    episode: 12,
+                },
+            ]
+        );
+    }
+
+    #[test]
+    fn returns_empty_iterator_when_no_paths_match() {
+        let paths = vec![
+            PathBuf::from("movie.mkv"),
+            PathBuf::from("random.series.mkv"),
+            PathBuf::from("video.2024.mp4"),
+        ];
+
+        let episodes: Vec<EpisodeData> = extract_episodes(&paths).collect();
+
+        assert!(episodes.is_empty());
+    }
+
+    #[test]
+    fn returns_empty_iterator_for_empty_input() {
+        let paths: Vec<PathBuf> = Vec::new();
+
+        let episodes: Vec<EpisodeData> = extract_episodes(&paths).collect();
+
+        assert!(episodes.is_empty());
+    }
+
+    #[test]
+    fn preserves_the_order_of_matching_paths() {
+        let paths = vec![
+            PathBuf::from("series.S04E10.mkv"),
+            PathBuf::from("not-an-episode.mkv"),
+            PathBuf::from("series.S01E02.mkv"),
+            PathBuf::from("series.S03E07.mkv"),
+        ];
+
+        let episodes: Vec<EpisodeData> = extract_episodes(&paths).collect();
+
+        assert_eq!(
+            episodes,
+            vec![
+                EpisodeData {
+                    season: 4,
+                    episode: 10,
+                },
+                EpisodeData {
+                    season: 1,
+                    episode: 2,
+                },
+                EpisodeData {
+                    season: 3,
+                    episode: 7,
+                },
+            ]
+        );
+    }
+
+    #[test]
+    fn extracts_episodes_from_nested_paths() {
+        let paths = vec![
+            PathBuf::from("/media/tv/Random Series/Season 01/random.series.S01E04.mkv"),
+            PathBuf::from("/media/tv/Another Series/Season 12/another.series.S12E103.mkv"),
+        ];
+
+        let episodes: Vec<EpisodeData> = extract_episodes(&paths).collect();
+
+        assert_eq!(
+            episodes,
+            vec![
+                EpisodeData {
+                    season: 1,
+                    episode: 4,
+                },
+                EpisodeData {
+                    season: 12,
+                    episode: 103,
+                },
+            ]
+        );
+    }
+
+    #[test]
+    fn can_consume_the_iterator_lazily() {
+        let paths = vec![
+            PathBuf::from("invalid.mkv"),
+            PathBuf::from("series.S01E04.mkv"),
+            PathBuf::from("series.S01E05.mkv"),
+        ];
+
+        let mut episodes = extract_episodes(&paths);
+
+        assert_eq!(
+            episodes.next(),
+            Some(EpisodeData {
+                season: 1,
+                episode: 4,
+            })
+        );
+
+        assert_eq!(
+            episodes.next(),
+            Some(EpisodeData {
+                season: 1,
+                episode: 5,
+            })
+        );
+
+        assert_eq!(episodes.next(), None);
+    }
 
     #[test]
     fn test_generate_movie_name_empty() {
