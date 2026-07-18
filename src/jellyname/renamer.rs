@@ -29,5 +29,6 @@ pub fn rename_movie(data: &MovieData, path: &str) -> anyhow::Result<()> {
 
 /// creates and moves files into new folders matching jellyfin spec
 pub fn rename_series(data: &SeriesData, episodes: &[Episode]) -> anyhow::Result<()> {
+    unimplemented!();
     Ok(())
 }
