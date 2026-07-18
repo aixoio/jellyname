@@ -40,8 +40,8 @@ pub struct SeriesData {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Episode {
-    filename: String,
-    episode: u16,
+    pub filename: String,
+    pub episode: u16,
 }
 
 impl Config {
