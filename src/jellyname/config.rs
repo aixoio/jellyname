@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 use crate::getter;
 
 pub const CONFIG_FILENAME: &str = "jellyname.toml";
+pub const SERIES_FILENAME: &str = "series.csv";
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Config {
