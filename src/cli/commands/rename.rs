@@ -15,9 +15,18 @@ use crate::{
 };
 
 #[derive(Subcommand)]
+/// Media types that can be prepared or renamed.
 pub enum RenameSubcommand {
-    Movie { path: PathBuf },
-    Series { path: PathBuf },
+    /// Rename and move a movie into a Jellyfin-compatible folder.
+    Movie {
+        /// Path to the movie file to rename.
+        path: PathBuf,
+    },
+    /// Scan a directory and write an editable `series.csv` rename plan.
+    Series {
+        /// Directory containing the series episodes to scan.
+        path: PathBuf,
+    },
 }
 
 pub fn run(sub: RenameSubcommand) -> ExitCode {

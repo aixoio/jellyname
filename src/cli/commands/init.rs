@@ -10,8 +10,11 @@ use crate::{
 };
 
 #[derive(Subcommand)]
+/// Media library types supported by configuration templates.
 pub enum InitMediaType {
+    /// Create a configuration template for a movie.
     Movie,
+    /// Create a configuration template for a television series.
     Series,
 }
 

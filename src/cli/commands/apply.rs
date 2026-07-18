@@ -13,7 +13,9 @@ use crate::{
 };
 
 #[derive(Subcommand)]
+/// Prepared rename plans that can be applied.
 pub enum ApplySubcommand {
+    /// Rename series episodes according to `series.csv`.
     Series,
 }
 
